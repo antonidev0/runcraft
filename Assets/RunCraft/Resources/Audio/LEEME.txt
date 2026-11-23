@@ -1,0 +1,18 @@
+Sonidos personalizados (opcional)
+=================================
+RunCraft genera sus sonidos por código. Si quieres cambiarlos por otros
+(por ejemplo, sonidos gratuitos CC0 de https://kenney.nl/assets?q=audio),
+copia aquí archivos .wav u .ogg con estos nombres exactos:
+
+  jump     - salto
+  roll     - agacharse / rodar
+  lane     - cambiar de carril
+  ore      - recoger un mineral
+  power    - recoger un power-up
+  stumble  - tropezar
+  crash    - chocar
+  roar     - rugido del golem
+  click    - botones
+  music    - música de fondo (en bucle)
+
+Ejemplo: Assets/RunCraft/Resources/Audio/jump.wav
