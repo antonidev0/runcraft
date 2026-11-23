@@ -12,9 +12,19 @@ namespace RunCraft
         static readonly Dictionary<string, Texture2D> cache = new Dictionary<string, Texture2D>();
         const int S = 16;
 
+
+        // Unity 6 puede entrar en Play sin recargar los scripts, así que los datos "static"
+        // sobreviven entre partidas de prueba aunque los objetos ya se hayan destruido.
+        // Por eso vaciamos la caché al empezar cada Play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            cache.Clear();
+        }
+
         public static Texture2D Get(string name)
         {
-            if (cache.TryGetValue(name, out var t)) return t;
+            if (cache.TryGetValue(name, out var t) && t != null) return t;
             t = Build(name);
             cache[name] = t;
             return t;

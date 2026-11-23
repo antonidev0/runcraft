@@ -12,6 +12,17 @@ namespace RunCraft
         static Mesh unitCube;
         static readonly Dictionary<Vector3, Mesh> tiledCache = new Dictionary<Vector3, Mesh>();
 
+
+        // Unity 6 puede entrar en Play sin recargar los scripts, así que los datos "static"
+        // sobreviven entre partidas de prueba aunque los objetos ya se hayan destruido.
+        // Por eso vaciamos la caché al empezar cada Play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            tiledCache.Clear();
+            unitCube = null;
+        }
+
         /// <summary>Objeto vacío que sirve como punto de giro (por ejemplo, una cadera o un hombro).</summary>
         public static Transform Pivot(Transform parent, string name, Vector3 localPos)
         {
@@ -64,7 +75,7 @@ namespace RunCraft
 
         static Mesh TiledBox(Vector3 size)
         {
-            if (!tiledCache.TryGetValue(size, out var m))
+            if (!tiledCache.TryGetValue(size, out var m) || m == null)
             {
                 m = BuildBox(size, true);
                 tiledCache[size] = m;

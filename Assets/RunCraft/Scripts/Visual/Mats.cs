@@ -12,6 +12,17 @@ namespace RunCraft
         static Material baseMat;
         static readonly Dictionary<string, Material> cache = new Dictionary<string, Material>();
 
+
+        // Unity 6 puede entrar en Play sin recargar los scripts, así que los datos "static"
+        // sobreviven entre partidas de prueba aunque los objetos ya se hayan destruido.
+        // Por eso vaciamos la caché al empezar cada Play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            cache.Clear();
+            baseMat = null;
+        }
+
         static Material Base
         {
             get
@@ -46,7 +57,7 @@ namespace RunCraft
         public static Material Solid(Color c)
         {
             string key = "c" + ColorUtility.ToHtmlStringRGBA(c);
-            if (!cache.TryGetValue(key, out var m))
+            if (!cache.TryGetValue(key, out var m) || m == null)
             {
                 m = Make(key, c, null);
                 cache[key] = m;
@@ -64,7 +75,7 @@ namespace RunCraft
         public static Material Tex(string textureName)
         {
             string key = "t" + textureName;
-            if (!cache.TryGetValue(key, out var m))
+            if (!cache.TryGetValue(key, out var m) || m == null)
             {
                 m = Make(key, UnityEngine.Color.white, Textures.Get(textureName));
                 cache[key] = m;
